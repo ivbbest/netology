@@ -32,7 +32,6 @@ with open('recipes.txt', 'r', encoding='utf-8') as f:
 
         if str(line.strip()).isdigit():
             continue
-
         if '|' in str(line.strip()):
             ingred = line.split('|')
 
