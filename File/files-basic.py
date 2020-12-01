@@ -55,13 +55,9 @@ with open('recipes.txt', 'r', encoding='utf-8') as f:
             if i == num:
                 continue
 
-
         elif line.strip() == '':
-           cook_book[key] = tmp_list
-           pprint(cook_book)
-           breakpoint()
+           my_list = tmp_list[:]
+           cook_book[key] = my_list
            del tmp_list[0:]
-           pprint(cook_book)
-
-
-#pprint(cook_book)
+        print(key)
+pprint(cook_book)
