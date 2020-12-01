@@ -21,30 +21,47 @@
 from pprint import pprint
 
 cook_book = dict()
-key = ''
-tmp_list = list()
 
 with open('recipes.txt', 'r', encoding='utf-8') as f:
+    key = ''
+    tmp_list = list()
+
     for line in f:
+        #breakpoint()
         if not line.strip() == '' and not str(line.strip()).isdigit() and \
                 '|' not in str(line.strip()):
             key = line.strip()
 
-        if str(line.strip()).isdigit():
-            continue
-        if '|' in str(line.strip()):
-            ingred = line.split('|')
+        elif str(line.strip()).isdigit():
+            num = int(line)
+            i = 0
 
-            tmp_list.append(
-                {
-                    'ingredient_name': str(ingred[0]).strip(),
-                    'quantity': int(str(ingred[1]).strip()),
-                    'measure': str(ingred[2]).strip()
-                }
+        elif '|' in str(line.strip()):
+            i += 1
+            ingred = str(line).strip().split('|')
+
+            ingredient_name = str(ingred[0]).strip()
+            quantity = int(str(ingred[1]).strip())
+            measure = str(ingred[2]).strip()
+
+            tmp_dict = dict(
+                ingredient_name = ingredient_name,
+                quantity = quantity,
+                measure = measure
             )
 
-        if line.strip() == '':
-            cook_book.setdefault(key, tmp_list)
-            tmp_list.clear()
+            tmp_list.append(tmp_dict)
 
-pprint(cook_book)
+            if i == num:
+                continue
+
+
+        elif line.strip() == '':
+           cook_book[key] = tmp_list
+           pprint(cook_book)
+           breakpoint()
+           del tmp_list[0:]
+           pprint(cook_book)
+
+
+#pprint(cook_book)
