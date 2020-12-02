@@ -18,46 +18,51 @@
 #     ]
 #   }
 
+
 from pprint import pprint
 
-cook_book = dict()
 
-with open('recipes.txt', 'r', encoding='utf-8') as f:
-    key = ''
-    tmp_list = list()
+def file_in_dict(file):
+    cook_book = dict()
 
-    for line in f:
-        #breakpoint()
-        if not line.strip() == '' and not str(line.strip()).isdigit() and \
-                '|' not in str(line.strip()):
-            key = line.strip()
+    with open(file, 'r', encoding='utf-8') as f:
+        tmp_list = list()
+        key = ''
+        for line in f:
+            if not line.strip() == '' and not str(line.strip()).isdigit() and \
+                    '|' not in str(line.strip()):
+                key = line.strip()
 
-        elif str(line.strip()).isdigit():
-            num = int(line)
-            i = 0
+            elif str(line.strip()).isdigit():
+                num = int(line)
+                i = 0
 
-        elif '|' in str(line.strip()):
-            i += 1
-            ingred = str(line).strip().split('|')
+            elif '|' in str(line.strip()):
+                i += 1
+                ingred = str(line).strip().split('|')
 
-            ingredient_name = str(ingred[0]).strip()
-            quantity = int(str(ingred[1]).strip())
-            measure = str(ingred[2]).strip()
+                ingredient_name = str(ingred[0]).strip()
+                quantity = int(str(ingred[1]).strip())
+                measure = str(ingred[2]).strip()
 
-            tmp_dict = dict(
-                ingredient_name = ingredient_name,
-                quantity = quantity,
-                measure = measure
-            )
+                tmp_dict = dict(
+                    ingredient_name = ingredient_name,
+                    quantity = quantity,
+                    measure = measure
+                )
 
-            tmp_list.append(tmp_dict)
+                tmp_list.append(tmp_dict)
 
-            if i == num:
+                if i == num:
+                    my_list = tmp_list[:]
+                    cook_book[key] = my_list
+                    del tmp_list[0:]
+
+            elif line.strip() == '':
                 continue
 
-        elif line.strip() == '':
-           my_list = tmp_list[:]
-           cook_book[key] = my_list
-           del tmp_list[0:]
-        print(key)
-pprint(cook_book)
+        return cook_book
+
+
+file = 'recipes.txt'
+pprint(file_in_dict(file))
