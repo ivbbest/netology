@@ -2,6 +2,28 @@ import json
 import xml.etree.ElementTree as ET
 
 
+def top_words(tmp_str, top_key, len_key):
+    """
+    На вход получаем строку, сколько топовых слов вывести и от какой длины слова делать анализ
+    """
+    #список с уникальными словами
+    list_words = list(tmp_str.split())
+    poisk = dict()
+
+    for elem in list_words:
+        len_word = len(elem)
+
+        if len_word > len_key:
+
+            if elem in poisk:
+                poisk[elem] += 1
+            else:
+                poisk[elem] = 1
+
+    #сортировка словаря и печать 10 популярных слов
+    popular_words = sorted(poisk.items(), key=lambda x: x[1], reverse=True)[:top_key]
+    print(popular_words)
+
 def analysis_json(file):
     """
     Программа, которая будет выводить топ 10 самых часто встречающихся в новостях слов длиннее
@@ -19,23 +41,7 @@ def analysis_json(file):
         my_words = (json_data["rss"]["channel"]["items"][i]["description"]).lower()
         tmp_str += ''.join(my_words)
 
-    #список с уникальными словами
-    list_words = list(tmp_str.split())
-    poisk = dict()
-
-    for elem in list_words:
-        len_word = len(elem)
-
-        if len_word > 6:
-
-            if elem in poisk:
-                poisk[elem] += 1
-            else:
-                poisk[elem] = 1
-
-    #сортировка словаря и печать 10 популярных слов
-    popular_words = sorted(poisk.items(), key=lambda x: x[1], reverse=True)[:10]
-    print(popular_words)
+    top_words(tmp_str, 10, 6)
 
 def analysis_xml(file):
     """
@@ -52,23 +58,7 @@ def analysis_xml(file):
         descr = news.find("description")
         xml_text += ''.join(descr.text.lower())
 
-    #список с уникальными словами
-    list_words = list(xml_text.split())
-    poisk = dict()
-
-    for elem in list_words:
-        len_word = len(elem)
-
-        if len_word > 6:
-
-            if elem in poisk:
-                poisk[elem] += 1
-            else:
-                poisk[elem] = 1
-
-    #сортировка словаря и печать 10 популярных слов
-    popular_words = sorted(poisk.items(), key=lambda x: x[1], reverse=True)[:10]
-    print(popular_words)
+    top_words(xml_text, 10, 6)
 
 
 file_json = 'newsafr.json'
