@@ -32,4 +32,4 @@ for hero in heroes:
         max_intelligence = intelligence
         max_heroes = hero
 
-print(f"Самый умный герой {max_heroes} с интеллектом {max_intelligence}!")
+print(f"Самый умный герой {max_heroes} с интеллектом {max_intelligence}!!")
