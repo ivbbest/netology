@@ -69,6 +69,41 @@ class VkUser:
         res = requests.get(users_url, params={**self.params, **user_params})
         return res.json()
 
+
+    # Получим базовую информацию о пользователе при помощи [friends.get](https://vk.com/dev/friends.get)
+    def friends_get(self, user_id=None):
+        if user_id is None:
+            user_id = self.owner_id
+        users_url = self.url + 'friends.get'
+        user_params = {
+            'user_id': user_id,
+        }
+        res = requests.get(users_url, params={**self.params, **user_params})
+        return res.json()
+
+    #поиск общих друзей из 2 пользователей
+    def mutual_friends(self, user_id1=None, user_id2=None):
+        if user_id1 is None:
+            user_id1 = self.owner_id
+
+        if user_id2 is None:
+            user_id2 = self.owner_id
+
+        if user_id1 == user_id2:
+            print('Вы ввели некорректные данные пользователей, у которых требуется найти общих друзей!!!\n')
+
+        else:
+           friend1 = set(self.friends_get(user_id1)['response']['items'])
+           friend2 = set(self.friends_get(user_id2)['response']['items'])
+           common_friends = list(set(friend1) & set(friend2))
+           for friend in common_friends:
+               if str(friend).isdigit():
+                   print(f'https://vk.com/id{friend}')
+
+               else:
+                   print(f'https://vk.com/{friend}')
+
+
     # def search_query(q, sorting=0):
     #
     #
@@ -102,6 +137,7 @@ class VkUser:
 
 if __name__ == '__main__':
     vk_client = VkUser(token, '5.126')
-    print(vk_client.get_groups())
-    print(vk_client.users_get())
+    #print(vk_client.get_groups())
+    #print(vk_client.friends_get())
+    vk_client.mutual_friends(171691064, 58439)
     # print(vk_client.search_query('python'))
