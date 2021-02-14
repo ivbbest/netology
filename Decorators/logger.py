@@ -29,7 +29,7 @@ def logger_muptiply(log):
     return logger
 
 
-@logger_muptiply('log2.txt')
+@logger_muptiply('log.txt')
 def summa(a, b):
     return a + b
 
