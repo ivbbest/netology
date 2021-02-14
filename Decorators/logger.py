@@ -5,15 +5,36 @@
 
 from datetime import datetime
 import time
+import os.path
 
-log = [0, 2, 3, 5, 7, 8, 9]
-time_format = "%Y-%m-%d %H:%M:%S"
 
-with open('log.txt', 'w', encoding="UTF-8") as f:
-    for i in log:
-        now = datetime.now()
-        info = f'Число {i} дата и время {now:{time_format}\n}'
-        print(info)
-        f.write(info)
-        # print(f'Число {i} дата и время {now:{time_format}}')
-        time.sleep(2)
+def logger_muptiply(log):
+    def logger(old_func):
+        time_format = "%Y-%m-%d %H:%M:%S"
+
+        def new_function(*args, **kwargs):
+            with open(log, 'a', encoding="UTF-8") as f:
+                result = old_func(*args, **kwargs)
+                now = datetime.now()
+                info = f"Дата и время вызова функции {now:{time_format}}, ее имя - {old_func.__name__}, " \
+                       f"аргументы ({args} {kwargs}), результат - {result}\n"
+                # print(info)
+                f.write(info)
+                time.sleep(2)
+
+            return result
+
+        return new_function
+
+    return logger
+
+
+@logger_muptiply('log2.txt')
+def summa(a, b):
+    return a + b
+
+
+summa(2, 8)
+summa(3, 9)
+summa(13, 6)
+summa(7, 5)
