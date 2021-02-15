@@ -5,7 +5,6 @@
 
 from datetime import datetime
 import time
-import os.path
 
 
 def logger_muptiply(log):
@@ -18,7 +17,7 @@ def logger_muptiply(log):
                 now = datetime.now()
                 info = f"Дата и время вызова функции {now:{time_format}}, ее имя - {old_func.__name__}, " \
                        f"аргументы ({args} {kwargs}), результат - {result}\n"
-                # print(info)
+                print(info)
                 f.write(info)
                 time.sleep(2)
 
@@ -33,8 +32,8 @@ def logger_muptiply(log):
 def summa(a, b):
     return a + b
 
-
-summa(2, 8)
-summa(3, 9)
-summa(13, 6)
-summa(7, 5)
+if __name__ == '__main__':
+    summa(2, 8)
+    summa(3, 9)
+    summa(13, 6)
+    summa(7, 5)
