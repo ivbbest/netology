@@ -15,11 +15,11 @@ class TestYandexDisk(unittest.TestCase):
 
     # корректный токен
 
-    token = {"Authorization": "OAuth AgAAAAAZhU-gAADLWwQPbEqXgkAQt0catuijfnk"}
+    token = {"Authorization": "***"}
 
     # некорректный токен
 
-    token1 = {"Authorization": "OAuth AgAAAAAZhU-gAADLWwQPbEijfnk"}
+    token1 = {"Authorization": "OAuth ***"}
 
     # длинное название
 
