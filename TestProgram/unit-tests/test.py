@@ -29,6 +29,3 @@ def test_function_b():
 
 if __name__ == "__main__":
     unittest.main()
-
- mock = Mock()
- mock.

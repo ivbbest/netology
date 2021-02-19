@@ -52,6 +52,7 @@ def remove_doc_from_shelf(doc_number):
     for directory_number, directory_docs_list in directories.items():
         if doc_number in directory_docs_list:
             directory_docs_list.remove(doc_number)
+            return True
             break
 
 
