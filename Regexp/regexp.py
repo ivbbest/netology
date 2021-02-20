@@ -11,6 +11,7 @@ with open("phonebook_raw.csv", encoding='UTF-8') as f:
 pprint(str(contacts_list[1][0]).split(' '))
 pprint(contacts_list)
 
+
 new_list = list()
 new_list.append(contacts_list[0])
 len_contacts_list = len(contacts_list)
