@@ -36,7 +36,7 @@ class YaUploader:
 
 
 if __name__ == '__main__':
-    token = {"Authorization": "OAuth AgAAAAAZhU-gAADLWwQPbEqXgkAQt0catuijfnk"}
+    token = {"Authorization": "OAuth ***"}
     uploader = YaUploader()
     result = uploader.create_dir_ya('5', token)
     print(result)
