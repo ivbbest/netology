@@ -95,5 +95,5 @@ def search_key_in_articles():
 
 
 if __name__ == '__main__':
-    # search_key_in_preview()
+    search_key_in_preview()
     search_key_in_articles()
