@@ -39,28 +39,44 @@ class Stack:
         если строка корректная, и "Несбалансированно", если строка составлена неверно.'''
         opening = ['(', '[', '{']
         closing = [')', ']', '}']
+        flag = True
+
+        # if len(text) % 2 != 0:
+        #     flag = False
+
         for el in text:
             if el in opening:
-                self.elements.insert(opening)
-        if self.size() % 2 != 0:
-            return 'Несбалансированно'
-        for el in stack:
+                self.push(el)
 
+            elif el in closing:
+                if self.isEmpty():
+                    flag = False
+                    break
+
+                elif el == ')':
+                    if self.pop() != opening[0]:
+                        flag = False
+                        break
+
+                elif el == ']':
+                    if self.pop() != opening[1]:
+                        flag = False
+                        break
+
+                elif el == '}':
+                    if self.pop() != opening[2]:
+                        flag = False
+                        break
+
+        if flag:
+            return 'Сбалансированно'
+        else:
+            return 'Несбалансированно'
 
 
 if __name__ == '__main__':
     stack = Stack()
-    stack.push(2)
-    stack.push('a')
-    stack.push('kfnskdjngjfdgjdf')
-    print(stack.peek())
-
-
-
-'''
-статьи полезные по теме:
-
-http://espressocode.top/check-for-balanced-parentheses-in-an-expression/
-https://ru.stackoverflow.com/questions/587694/%d0%9f%d1%80%d0%be%d0%b2%d0%b5%d1%80%d0%b8%d1%82%d1%8c-%d0%bf%d1%80%d0%b0%d0%b2%d0%b8%d0%bb%d1%8c%d0%bd%d0%be-%d0%bb%d0%b8-%d0%b2%d0%bb%d0%be%d0%b6%d0%b5%d0%bd%d1%8b-%d1%81%d0%ba%d0%be%d0%b1%d0%ba%d0%b8-%d0%b2-%d1%82%d0%b5%d0%ba%d1%81%d1%82%d0%b5
-https://overcoder.net/q/1042471/%D1%80%D0%B5%D0%B0%D0%BB%D0%B8%D0%B7%D0%B0%D1%86%D0%B8%D1%8F-%D1%81%D1%82%D0%B5%D0%BA%D0%B0-%D1%81-%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D1%8C%D1%8E-python
-'''
+    with open('file.txt', encoding='UTF-8') as f:
+        for line in f:
+            info = stack.balance(line.strip())
+            print(f'Строка {line.strip()} является {info}й')
