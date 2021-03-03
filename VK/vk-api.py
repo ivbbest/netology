@@ -1,4 +1,3 @@
-
 # **Синтаксис любого запроса**
 # https://vk.com/dev/api_requests
 #
@@ -30,6 +29,13 @@ class VkUser:
             'v': self.version
         }
         self.owner_id = requests.get(self.url+'users.get', self.params).json()['response'][0]['id']
+        self.friends = []
+
+    # def __and__(self, other):
+    #     user1 = VkUser(self, self.token, self.version)
+    #     user2 = VkUser(other, self.token, self.version)
+    #
+    #     return user1 & user2
 
     # получим своих подписчиков при помощи [users.getFollowers](https://vk.com/dev/users.getFollowers)
     def get_followers(self, user_id=None):
@@ -79,7 +85,7 @@ class VkUser:
             'user_id': user_id,
         }
         res = requests.get(users_url, params={**self.params, **user_params})
-        return res.json()
+        return res.json()['response']['items']
 
     #поиск общих друзей из 2 пользователей
     def mutual_friends(self, user_id1=None, user_id2=None):
@@ -90,54 +96,39 @@ class VkUser:
             user_id2 = self.owner_id
 
         if user_id1 == user_id2:
-            print('Вы ввели некорректные данные пользователей, у которых требуется найти общих друзей!!!\n')
+            return 'Вы ввели некорректные данные пользователей, у которых требуется найти общих друзей!!!\n'
 
         else:
-           friend1 = set(self.friends_get(user_id1)['response']['items'])
-           friend2 = set(self.friends_get(user_id2)['response']['items'])
-           common_friends = list(set(friend1) & set(friend2))
-           for friend in common_friends:
-               if str(friend).isdigit():
-                   print(f'https://vk.com/id{friend}')
+            self.friends = list(set(self.friends_get(user_id1)) & \
+                   set(self.friends_get(user_id2)))
 
-               else:
-                   print(f'https://vk.com/{friend}')
+            # return self.friends
 
 
-    # def search_query(q, sorting=0):
-    #
-    #
-    #     '''
-    #     Напишем функцию, которая будет находить группы по поисковому запросу при помощи метода
-    #     [groups.search](https://vk.com/dev/groups.search)
-    #
-    #     Параметры sort
-    #     #0 — сортировать по умолчанию (аналогично результатам поиска в полной версии сайта);
-    #     #1 — сортировать по скорости роста;
-    #     #2 — сортировать по отношению дневной посещаемости к количеству пользователей;
-    #     #3 — сортировать по отношению количества лайков к количеству пользователей;
-    #     #4 — сортировать по отношению количества комментариев к количеству пользователей;
-    #     #5 — сортировать по отношению количества записей в обсуждениях к количеству пользователей.
-    #     '''
-    #
-    #     users_url = 'https://api.vk.com/method/' + 'groups.search'
-    #
-    #     user_params = {
-    #         'q': q,
-    #         'sort': sorting,
-    #         'access_token': token,
-    #         'v': '5.126',
-    #         'count': 300
-    #     }
-    #
-    #     res = requests.get(users_url, params=user_params)
-    #     req = res['response']['items']
-    #     return req.json()
+           # friend1 = set(self.friends_get(user_id1)['response']['items'])
+           # friend2 = set(self.friends_get(user_id2)['response']['items'])
+           # common_friends = list(set(friend1) & set(friend2))
+           # for friend in common_friends:
+           #     if str(friend).isdigit():
+           #         print(f'https://vk.com/id{friend}')
+           #
+           #     else:
+           #         print(f'https://vk.com/{friend}')
+
+    def __str__(self):
+        for friend in self.friends:
+
+            if str(friend).isdigit():
+               return f'https://vk.com/id{friend}'
+
+            else:
+               return f'https://vk.com/{friend}'
 
 
 if __name__ == '__main__':
     vk_client = VkUser(token, '5.126')
     #print(vk_client.get_groups())
     #print(vk_client.friends_get())
-    vk_client.mutual_friends(171691064, 58439)
+    common_friends = vk_client.mutual_friends(15871719, 138611543)
+    print(common_friends)
     # print(vk_client.search_query('python'))
