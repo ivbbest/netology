@@ -18,11 +18,11 @@ class Stack:
 
     def push(self, elem):
         '''добавляет новый элемент на вершину стека. Метод ничего не возвращает.'''
-        self.elements.insert(0, elem)
+        self.elements.append(elem)
 
     def pop(self):
         '''удаляет верхний элемент стека. Стек изменяется. Метод возвращает верхний элемент стека'''
-        return self.elements.pop(0)
+        return self.elements.pop()
 
     def peek(self):
         ''' возвращает верхний элемент стека, но не удаляет его. Стек не меняется.'''
@@ -34,49 +34,47 @@ class Stack:
         '''возвращает количество элементов в стеке.'''
         return len(self.elements)
 
-    def balance(self, text):
-        '''Программа ожидает на вход строку со скобками. На выход сообщение: "Сбалансированно",
-        если строка корректная, и "Несбалансированно", если строка составлена неверно.'''
-        opening = ['(', '[', '{']
-        closing = [')', ']', '}']
-        flag = True
+def balance(text):
+    '''Программа ожидает на вход строку со скобками. На выход сообщение: "Сбалансированно",
+    если строка корректная, и "Несбалансированно", если строка составлена неверно.'''
+    opening = ['(', '[', '{']
+    closing = [')', ']', '}']
+    flag = True
+    stack = Stack()
 
-        # if len(text) % 2 != 0:
-        #     flag = False
+    for el in text:
+        if el in opening:
+            stack.push(el)
 
-        for el in text:
-            if el in opening:
-                self.push(el)
+        elif el in closing:
+            if stack.isEmpty():
+                flag = False
+                break
 
-            elif el in closing:
-                if self.isEmpty():
+            elif el == ')':
+                if stack.pop() != opening[0]:
                     flag = False
                     break
 
-                elif el == ')':
-                    if self.pop() != opening[0]:
-                        flag = False
-                        break
+            elif el == ']':
+                if stack.pop() != opening[1]:
+                    flag = False
+                    break
 
-                elif el == ']':
-                    if self.pop() != opening[1]:
-                        flag = False
-                        break
+            elif el == '}':
+                if stack.pop() != opening[2]:
+                    flag = False
+                    break
 
-                elif el == '}':
-                    if self.pop() != opening[2]:
-                        flag = False
-                        break
-
-        if flag:
-            return 'Сбалансированно'
-        else:
-            return 'Несбалансированно'
+    if flag:
+        return 'Сбалансированно'
+    else:
+        return 'Несбалансированно'
 
 
 if __name__ == '__main__':
-    stack = Stack()
+
     with open('file.txt', encoding='UTF-8') as f:
         for line in f:
-            info = stack.balance(line.strip())
+            info = balance(line.strip())
             print(f'Строка {line.strip()} является {info}й')
