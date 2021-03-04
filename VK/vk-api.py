@@ -31,11 +31,8 @@ class VkUser:
         self.owner_id = requests.get(self.url+'users.get', self.params).json()['response'][0]['id']
         self.friends = []
 
-    # def __and__(self, other):
-    #     user1 = VkUser(self, self.token, self.version)
-    #     user2 = VkUser(other, self.token, self.version)
-    #
-    #     return user1 & user2
+    def __and__(self, other):
+        return self.friends_get() & other
 
     # получим своих подписчиков при помощи [users.getFollowers](https://vk.com/dev/users.getFollowers)
     def get_followers(self, user_id=None):
@@ -85,50 +82,50 @@ class VkUser:
             'user_id': user_id,
         }
         res = requests.get(users_url, params={**self.params, **user_params})
-        return res.json()['response']['items']
+        return set(res.json()['response']['items'])
 
     #поиск общих друзей из 2 пользователей
-    def mutual_friends(self, user_id1=None, user_id2=None):
-        if user_id1 is None:
-            user_id1 = self.owner_id
-
-        if user_id2 is None:
-            user_id2 = self.owner_id
-
-        if user_id1 == user_id2:
-            return 'Вы ввели некорректные данные пользователей, у которых требуется найти общих друзей!!!\n'
-
-        else:
-            self.friends = list(set(self.friends_get(user_id1)) & \
-                   set(self.friends_get(user_id2)))
-
-            # return self.friends
-
-
-           # friend1 = set(self.friends_get(user_id1)['response']['items'])
-           # friend2 = set(self.friends_get(user_id2)['response']['items'])
-           # common_friends = list(set(friend1) & set(friend2))
-           # for friend in common_friends:
-           #     if str(friend).isdigit():
-           #         print(f'https://vk.com/id{friend}')
-           #
-           #     else:
-           #         print(f'https://vk.com/{friend}')
+    # def mutual_friends(self, user_id1=None, user_id2=None):
+    #     if user_id1 is None:
+    #         user_id1 = self.owner_id
+    #
+    #     if user_id2 is None:
+    #         user_id2 = self.owner_id
+    #
+    #     if user_id1 == user_id2:
+    #         return 'Вы ввели некорректные данные пользователей, у которых требуется найти общих друзей!!!\n'
+    #
+    #     else:
+    #         self.friends = list(set(self.friends_get(user_id1)) & \
+    #                set(self.friends_get(user_id2)))
+    #
+    #         return self.friends
+    #
+    #
+    # def get_common_friend(self):
+    #        result = ''
+    #        for friend in self.friends:
+    #            if str(friend).isdigit():
+    #                result += f'https://vk.com/id{friend}\n'
+    #
+    #            else:
+    #                result += f'https://vk.com/{friend}\n'
+    #
+    #        return result
 
     def __str__(self):
-        for friend in self.friends:
+       pass
 
-            if str(friend).isdigit():
-               return f'https://vk.com/id{friend}'
-
-            else:
-               return f'https://vk.com/{friend}'
+    # __repr__ = __str__
 
 
 if __name__ == '__main__':
     vk_client = VkUser(token, '5.126')
     #print(vk_client.get_groups())
     #print(vk_client.friends_get())
-    common_friends = vk_client.mutual_friends(15871719, 138611543)
-    print(common_friends)
-    # print(vk_client.search_query('python'))
+    # common_friends = vk_client.mutual_friends(15871719, 138611543)
+    usr1 = vk_client.friends_get(15871719)
+    usr2 = vk_client.friends_get(138611543)
+    mult = usr1 & usr2
+    for el in mult:
+        print(f'https://vk.com/id{el}/')
