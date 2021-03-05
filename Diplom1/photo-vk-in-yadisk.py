@@ -1,6 +1,7 @@
 import requests
 from pprint import pprint
 from datetime import datetime
+from progress.bar import Bar
 
 token = '958eb5d439726565e9333aa30e50e0f937ee432e927f0dbd541c541887d919a7c56f95c04217915c32008'
 
@@ -19,7 +20,7 @@ class VkUser:
         self.user_id = user_id
 
     def photos_get(self):
-        '''Получить список фотографий user'''
+        '''Получение json файла с информацией о фото по user_id'''
         users_url = self.url + 'photos.get'
         user_params = {
             'user_id': self.user_id,
@@ -31,6 +32,8 @@ class VkUser:
         return res.json()
 
     def photos_get_url(self):
+        '''Разбор json photos_get с получением на выходе списка из кортежей, в которых указано:
+        количество лайков, url картинки из профиля и дата загрузки'''
         json_info = self.photos_get()
         photo_all_info = list()
         for info_photo in json_info['response']['items']:
@@ -44,6 +47,31 @@ class VkUser:
 
         return photo_all_info
 
+    def save_photo_to_disk(self):
+        '''Сохранение картинок из ВК на компьютер.'''
+        photo_info = self.photos_get_url()
+        set_likes = set()
+        list_photo_file = list()
+
+        # Добавил прогресс бар, чтобы в терминале видеть процесс работы
+        with Bar('Processing', max=len(photo_info)) as bar:
+            for photo in photo_info:
+                name = photo[0]
+                #подумать тут дублей названий не может быть, потому что всегда добавляется дата фото
+                # а нужно делать название лайки и если столько лайков есть для другого фото,
+                # то тогда только добавлять дату
+
+                if name not in set_likes:
+                    name = f'{name}{photo[2]}'
+                set_likes.add(name)
+
+                url = requests.get(photo[1])
+                with open(f'images/{name}.jpg', 'wb') as f:
+                    f.write(url.content)
+                    list_photo_file.append({"file_name": f'{name}.jpg', "size": "z"})
+                    bar.next()
+
+        return list_photo_file
 
     def __and__(self, other):
         '''Найти общих друзей'''
@@ -121,22 +149,6 @@ class VkUser:
         return 'https://vk.com/id' + str(self.user_id)
 
 
-def url_from_id(user_id):
-    """Сделать id пользователя готовым урлом"""
-    if str(user_id).isdigit():
-        url = f'https://vk.com/id{user_id}'
-    else:
-        url = f'https://vk.com/{user_id}'
-
-    return url
-
-
 if __name__ == '__main__':
     usr1 = VkUser(token, '5.126', '15871719')
-    pprint(usr1.photos_get_url())
-    # pprint(usr1.friends_get())
-    # usr2 = VkUser(token, '5.126', '138611543')
-    # pprint(usr2.friends_get())
-    # print(usr1 & usr2)
-    # for elem in usr1 & usr2:
-    #     print(url_from_id(elem))
+    pprint(usr1.save_photo_to_disk())
