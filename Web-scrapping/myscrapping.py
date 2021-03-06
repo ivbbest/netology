@@ -51,6 +51,7 @@ def search_key_in_preview():
     Поиск ключей в превью постов на хабре. Задача №1
     '''
     posts = init_info_habr()
+    articles = list()
 
     for post in posts:
         if any([desired in post.text.lower() for desired in KEYWORDS]):
@@ -58,14 +59,22 @@ def search_key_in_preview():
             title_element = post.find('a', class_='post__title_link')
             title = title_element.text
             href = title_element.attrs.get('href')
-            return f'{time} - {title} - {href}'
+            art = f'{time} - {title} - {href}'
+            articles.append(art)
+
+    if len(articles) > 0:
+        for elem in articles:
+            print(elem)
+    else:
+        print('Статей с заданными ключами не найдено')
 
 
-def search_key_in_url():
+def search_key_in_articles():
     '''
     Поиск ключей в полной статье на хабре. Задача №2
     '''
     list_url = full_url_info()
+    articles = list()
 
     for href in list_url:
         ret = requests.get(href)
@@ -76,11 +85,16 @@ def search_key_in_url():
         if any([desired in post.text.lower() for desired in KEYWORDS]):
             time = post.find('span', class_='post__time').text
             title = post.find('span', class_='post__title-text').text
-            return f'{time} - {title} - {href}'
+            art = f'{time} - {title} - {href}'
+            articles.append(art)
 
-    return
+    if len(articles) > 0:
+        for elem in articles:
+            print(elem)
+    else:
+        print('Статей с заданными ключами не найдено')
 
 
 if __name__ == '__main__':
-    print(search_key_in_preview())
-    print(search_key_in_url())
+    search_key_in_preview()
+    search_key_in_articles()
