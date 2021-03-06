@@ -42,6 +42,7 @@ def full_url_info():
         href = title_element.attrs.get('href')
         href_list.append(href)
 
+    print(href_list)
     return href_list
 
 
